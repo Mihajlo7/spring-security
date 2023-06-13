@@ -7,14 +7,20 @@ import io.jsonwebtoken.security.Keys;
 
 import java.security.Key;
 import java.util.Base64;
+import java.util.function.Function;
 
 public class JWTService {
 
     private static final String SECRET_KEY="D77DA398955F942A4A6172BAD491E";
     public String extractUsername(String token) {
-        return null;
+
+        return extractClaim(token,Claims::getSubject);
     }
 
+    public <T> T extractClaim(String token, Function<Claims,T> claimsResolver){
+        final Claims claims=extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
     private Claims extractAllClaims(String token){
         return Jwts
                 .parserBuilder()
