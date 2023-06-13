@@ -38,6 +38,7 @@ public class JWTService {
     public String generateToken(UserDetails userDetails){
         return generateToken(new HashMap<>(),userDetails);
     }
+
     private Claims extractAllClaims(String token){
         return Jwts
                 .parserBuilder()
