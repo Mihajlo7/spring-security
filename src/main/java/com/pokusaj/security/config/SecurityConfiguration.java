@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private JWTAuthenticationFilter jwtAuthFilter;
+    private final JWTAuthenticationFilter jwtAuthFilter;
 
     private final AuthenticationProvider authenticationProvider;
     @Bean
@@ -28,7 +28,11 @@ public class SecurityConfiguration {
                 .anyRequest()
                 .authenticated();
 
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        //http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        // Ovako mora od spring security 6
+        http.sessionManagement((session)->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                );
         http .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
